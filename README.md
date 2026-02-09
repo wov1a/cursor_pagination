@@ -30,7 +30,7 @@ dependencies:
 ### 1. Define Your Models
 
 ```dart
-/// Модель продукта
+/// Product model
 class Product {
   final String id;
   final String title;
@@ -43,7 +43,7 @@ class Product {
   });
 }
 
-/// Кастомный курсор для пагинации
+/// Custom cursor for pagination
 class ProductCursor {
   final String? lastSeenId;
   final int limit;
@@ -68,13 +68,13 @@ final controller = CubitPaginationController<Product, ProductCursor, String>(
   ),
   getPageFunc: (pagination) async {
     try {
-      // Извлекаем курсор
+      // Extract cursor
       final cursor = pagination.cursor ?? ProductCursor(limit: pagination.limit);
 
-      // Загружаем данные через API/Repository
+      // Load data via API/Repository
       final products = await repository.getProducts(cursor);
 
-      // Определяем курсор для следующей страницы
+      // Determine cursor for next page
       final nextCursor = products.isNotEmpty
           ? cursor.updateCursor(products.last.id)
           : cursor;
@@ -145,7 +145,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       body: CubitPaginatedListBuilder<Product, ProductCursor, String>(
         controller: controller,
 
-        // 📊 Состояние с данными
+        // 📊 Data state
         dataBuilder: (context, dataState, isProcessing) {
           final products = dataState.itemList;
           final isLastPage = dataState.isLastItems;
@@ -158,12 +158,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
               itemCount: products.length + (isLastPage ? 0 : 1),
               separatorBuilder: (_, __) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
-                // Shimmer индикатор загрузки
+                // Shimmer loading indicator
                 if (index >= products.length) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                // Карточка продукта
+                // Product card
                 final product = products[index];
                 return Card(
                   child: ListTile(
@@ -180,12 +180,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
           );
         },
 
-        // 📭 Пустое состояние
+        // 📭 Empty state
         emptyBuilder: (context, _, __) => const Center(
           child: Text('No products found'),
         ),
 
-        // ❌ Состояние ошибки
+        // ❌ Error state
         errorBuilder: (context, errorState, __) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -357,7 +357,7 @@ final controller = CubitPaginationController<Message, DateTime, String>(
 #### Custom Cursor Type (Composite)
 
 ```dart
-/// Кастомный курсор с несколькими полями
+/// Custom cursor with multiple fields
 class ProductCursor {
   final String? lastSeenId;
   final int limit;
@@ -396,19 +396,19 @@ final controller = CubitPaginationController<Product, ProductCursor, String>(
 ### Manual Operations
 
 ```dart
-// Загрузить первую страницу (сброс)
+// Load first page (reset)
 controller.getFirst();
 
-// Загрузить следующую страницу вручную
+// Load next page manually
 controller.getNext();
 
-// Обновить текущую страницу
+// Refresh current page
 controller.refreshCurrent();
 
-// Обновить конкретный элемент
+// Update specific item
 controller.updateItemAt(index, updatedProduct);
 
-// Удалить конкретный элемент
+// Remove specific item
 controller.removeItemAt(index);
 ```
 
@@ -480,4 +480,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 🙏 Credits
 
 Created and maintained by the Flutter community.
+
 # cursor_pagination

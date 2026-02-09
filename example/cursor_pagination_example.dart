@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
 // MODELS
 // ============================================================================
 
-/// Модель продукта
+/// Product model
 class Product {
   final String id;
   final String title;
@@ -35,7 +35,7 @@ class Product {
   });
 }
 
-/// Кастомный курсор для пагинации
+/// Custom cursor for pagination
 class ProductCursor {
   final String? lastSeenId;
   final int limit;
@@ -54,9 +54,9 @@ class ProductCursor {
 // MOCK REPOSITORY
 // ============================================================================
 
-/// Mock repository с фейковыми данными
+/// Mock repository with fake data
 class MockProductsRepository {
-  // Имитация базы данных продуктов
+  // Simulating a product database
   static final List<Product> _allProducts = List.generate(
     50,
     (index) => Product(
@@ -68,19 +68,19 @@ class MockProductsRepository {
     ),
   );
 
-  /// Загрузить продукты с пагинацией
+  /// Load products with pagination
   Future<List<Product>> getProducts(ProductCursor cursor) async {
-    // Имитация задержки сети
+    // Simulate network delay
     await Future.delayed(const Duration(milliseconds: 800));
 
-    // Найти индекс последнего элемента
+    // Find the index of the last element
     int startIndex = 0;
     if (cursor.lastSeenId != null) {
       startIndex =
           _allProducts.indexWhere((p) => p.id == cursor.lastSeenId) + 1;
     }
 
-    // Вернуть следующую порцию
+    // Return the next batch
     final endIndex = (startIndex + cursor.limit).clamp(0, _allProducts.length);
     return _allProducts.sublist(startIndex, endIndex);
   }
@@ -95,7 +95,7 @@ class ProductsViewModel {
 
   ProductsViewModel(this._repository);
 
-  /// Контроллер пагинации
+  /// Pagination controller
   late final paginationController =
       CubitPaginationController<Product, ProductCursor, String>(
         firstPagePointer: CursorPagination<ProductCursor>(
@@ -106,7 +106,7 @@ class ProductsViewModel {
         getPageFunc: _fetchPage,
       );
 
-  /// Внутренний метод загрузки страницы
+  /// Internal page loading method
   Future<PaginationResult<Product, ProductCursor, String>> _fetchPage(
     CursorPagination<ProductCursor> pagination,
   ) async {
@@ -114,10 +114,10 @@ class ProductsViewModel {
       final cursor =
           pagination.cursor ?? ProductCursor(limit: pagination.limit);
 
-      // Загружаем данные через repository
+      // Load data via repository
       final products = await _repository.getProducts(cursor);
 
-      // Определяем курсор для следующей страницы
+      // Determine cursor for next page
       final nextCursor = products.isNotEmpty
           ? cursor.updateCursor(products.last.id)
           : cursor.first();
@@ -175,7 +175,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       body: CubitPaginatedListBuilder<Product, ProductCursor, String>(
         controller: _viewModel.paginationController,
 
-        // 📊 Состояние с данными
+        // 📊 Data state
         dataBuilder: (context, dataState, isProcessing) {
           final products = dataState.itemList;
           final isLastPage = dataState.isLastItems;
@@ -195,12 +195,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     itemCount: products.length + (isLastPage ? 0 : 1),
                     separatorBuilder: (_, __) => const SizedBox(height: 16),
                     itemBuilder: (context, index) {
-                      // Shimmer индикатор загрузки следующей страницы
+                      // Shimmer loading indicator for next page
                       if (index >= products.length) {
                         return const ProductCardShimmer();
                       }
 
-                      // Карточка продукта
+                      // Product card
                       final product = products[index];
                       return ProductCard(
                         product: product,
@@ -221,7 +221,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           );
         },
 
-        // 📭 Пустое состояние
+        // 📭 Empty state
         emptyBuilder: (context, emptyState, isProcessing) {
           return const Center(
             child: Column(
@@ -238,7 +238,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           );
         },
 
-        // ❌ Состояние ошибки
+        // ❌ Error state
         errorBuilder: (context, errorState, isProcessing) {
           return Center(
             child: Column(
@@ -296,7 +296,7 @@ class ProductCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Название
+              // Title
               Text(
                 product.title,
                 style: const TextStyle(
@@ -306,7 +306,7 @@ class ProductCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              // Описание
+              // Description
               Text(
                 product.description,
                 style: TextStyle(fontSize: 14, color: Colors.grey[600]),
