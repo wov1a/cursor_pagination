@@ -1,9 +1,9 @@
 name: cursor_pagination
 description: A flexible cursor-based pagination library for Flutter with full generic type support. Works with ChangeNotifier, BLoC/Cubit, and supports any cursor type.
 version: 1.0.0
-repository: https://github.com/your-username/cursor_pagination
-homepage: https://github.com/your-username/cursor_pagination
-documentation: https://github.com/your-username/cursor_pagination#readme
+repository: https://github.com/wov1a/cursor_pagination
+homepage: https://github.com/wov1a/cursor_pagination
+documentation: https://github.com/wov1a/cursor_pagination#readme
 
 environment:
   sdk: ^3.10.4
