@@ -1,3 +1,8 @@
+## 1.0.1
+
+- Widened SDK constraint: `>=3.0.0 <4.0.0` (was `^3.10.4`) — works with any Dart 3.x
+- Widened flutter_bloc constraint: `>=8.0.0 <10.0.0` (was `^8.1.0`) — supports bloc 8.x and 9.x
+
 ## 1.0.0
 
 ### Initial Release 🎉
